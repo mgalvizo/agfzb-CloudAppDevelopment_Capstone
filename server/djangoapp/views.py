@@ -108,19 +108,22 @@ def get_dealer_details(request, dealer_id):
 
 def add_review(request, dealer_id):
 
-    url = "https://4f5ee62d.us-south.apigw.appdomain.cloud/api/review/"
+    if request.user.is_authenticated:
+        if request.POST:
+            url = "https://4f5ee62d.us-south.apigw.appdomain.cloud/api/review/"
+            name = request.user.first_name + " " + request.user.last_name
 
-    json_payload = {
-        "name": "Miguel",
-        "dealership": int(dealer_id),
-        "review": "It works",
-        "purchase": False,
-        "purchase_date": "02/05/09",
-        "car_make": "MG",
-        "car_model": "ASD",
-        "car_year": 2021
-    }
-
-    review = post_request(url, json_payload, dealer_id=dealer_id)
-    
-    return HttpResponse(review)
+            json_payload = {
+                "name": name,
+                "dealership": int(dealer_id),
+                "review": request.POST['review'],
+                "purchase": request.POST['purchase'],
+                "purchase_date": request.POST['purchase_date'],
+                "car_make": request.POST['car_make'],
+                "car_model": request.POST['car_model'],
+                "car_year": request.POST['car_year']
+            }
+            
+            review = post_request(url, json_payload, dealer_id=dealer_id)
+            
+            return HttpResponse(review)
