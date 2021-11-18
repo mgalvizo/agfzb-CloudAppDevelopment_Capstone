@@ -37,7 +37,7 @@ def post_request(url, json_payload, **kwargs):
     print("POST from {} ".format(url))
     try:
         # Call post method of requests library with URL and parameters
-        response = requests.post(url, headers={'Content-Type': 'application/json'}, params=kwargs, json=json_payload)
+        response = requests.post(url, json=json_payload, params=kwargs)
     except:
         # If any error occurs
         print("Network exception occurred")

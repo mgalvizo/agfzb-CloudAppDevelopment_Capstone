@@ -9,7 +9,7 @@ from django.contrib import messages
 from datetime import datetime
 import logging
 import json
-from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, post_request
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -108,24 +108,19 @@ def get_dealer_details(request, dealer_id):
 
 def add_review(request, dealer_id):
 
-    if request.user.is_authenticated:
-        if request.method == "POST":
-            url = "https://4f5ee62d.us-south.apigw.appdomain.cloud/api/review?dealer_id=" + str(dealer_id)
-            review = {
-                "name" = request.POST['name'],
-                "dealership" = dealer_id,
-                "review" = request.POST['review'],
-                "purchase" = request.POST['purchase'],
-                "purchase_date" = request.POST['purchase_date'],
-                "car_make" = request.POST['car_make'],
-                "car_model" = request.POST['car_model'],
-                "car_year" = request.POST['car_year']
-            }
+    url = "https://4f5ee62d.us-south.apigw.appdomain.cloud/api/review/"
 
-            json_payload {
-                "review": review
-            }
+    json_payload = {
+        "name": "Miguel",
+        "dealership": int(dealer_id),
+        "review": "It works",
+        "purchase": False,
+        "purchase_date": "02/05/09",
+        "car_make": "MG",
+        "car_model": "ASD",
+        "car_year": 2021
+    }
 
-            review_post = post_request(url, json_payload, dealer_id=dealer_id)
-
-            return HttpResponse(review_post)
+    review = post_request(url, json_payload, dealer_id=dealer_id)
+    
+    return HttpResponse(review)
