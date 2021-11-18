@@ -107,11 +107,13 @@ def get_dealer_details(request, dealer_id):
 # ...
 
 def add_review(request, dealer_id):
-    if request.method == "POST":
-        if request.user.is_authenticated:
+
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            url = "https://4f5ee62d.us-south.apigw.appdomain.cloud/api/review?dealer_id=" + str(dealer_id)
             review = {
                 "name" = request.POST['name'],
-                "dealership" = request.POST['dealership'],
+                "dealership" = dealer_id,
                 "review" = request.POST['review'],
                 "purchase" = request.POST['purchase'],
                 "purchase_date" = request.POST['purchase_date'],
@@ -124,6 +126,6 @@ def add_review(request, dealer_id):
                 "review": review
             }
 
-            review_post = post_request(url, json_payload, dealerId=dealer_id)
+            review_post = post_request(url, json_payload, dealer_id=dealer_id)
 
             return HttpResponse(review_post)
