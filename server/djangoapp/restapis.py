@@ -65,14 +65,14 @@ def get_dealers_from_cf(url, **kwargs):
 def get_dealer_reviews_from_cf(url, dealer_id, **kwargs):
     results = []
     json_result = get_request(url)
-    print(json_result)
     if json_result:
         reviews = json_result["reviews"]
         for review in reviews:
-            analyze_review_sentiments('hola')
+            sentiment_data = analyze_review_sentiments(review["review"])
+            sentiment = sentiment_data['sentiment']['document']['label']
             review_obj = DealerReview(dealership=review["dealership"], name=review["name"], purchase=review["purchase"], 
                                       review=review["review"], purchase_date=review["purchase_date"], car_make=review["car_make"], 
-                                      car_model=review["car_model"], car_year=review["car_year"], sentiment='')
+                                      car_model=review["car_model"], car_year=review["car_year"], sentiment=sentiment)
             results.append(review_obj)
 
     return results
@@ -88,7 +88,7 @@ def analyze_review_sentiments(dealerreview):
 
     authenticator = IAMAuthenticator(api_key)
     natural_language_understanding = NaturalLanguageUnderstandingV1(
-        version=kwargs['params']['version'],
+        version='2021-08-01',
         authenticator=authenticator
     )
     natural_language_understanding.set_service_url(url)
