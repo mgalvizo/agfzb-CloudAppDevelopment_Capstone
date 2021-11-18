@@ -106,3 +106,24 @@ def get_dealer_details(request, dealer_id):
 # def add_review(request, dealer_id):
 # ...
 
+def add_review(request, dealer_id):
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            review = {
+                "name" = request.POST['name'],
+                "dealership" = request.POST['dealership'],
+                "review" = request.POST['review'],
+                "purchase" = request.POST['purchase'],
+                "purchase_date" = request.POST['purchase_date'],
+                "car_make" = request.POST['car_make'],
+                "car_model" = request.POST['car_model'],
+                "car_year" = request.POST['car_year']
+            }
+
+            json_payload {
+                "review": review
+            }
+
+            review_post = post_request(url, json_payload, dealerId=dealer_id)
+
+            return HttpResponse(review_post)
