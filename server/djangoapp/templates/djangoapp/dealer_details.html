@@ -10,9 +10,51 @@
     <body>
 
     <!--Add a nav bar here -->
-
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Best Cars</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                {% if user.is_authenticated %}
+                <li>
+                    <a class="btn btn-link" href="{% url 'djangoapp:add_review' dealer_id %}">Add Review</a>
+                    <a class="btn btn-link" href="#">{{ user.first_name }}({{ user.username }})</a>
+                    <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
+                </li>
+                {% else %}
+                <li>
+                    <form class="form-inline" action="{% url 'djangoapp:login' %}" method="post">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Username" name="username" >
+                            <input type="password" class="form-control" placeholder="Password" name="psw" >
+                            <button class="btn btn-primary" type="submit">Login</button>
+                            <a class="btn btn-link" href="{% url 'djangoapp:registration' %}">Sign Up</a>
+                        </div>
+                    </form>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
     <!-- Add reviews as cards -->
-
+    <div class="card-columns">
+        {% for review in review_list %}
+        <div class="card">
+            <img src="{{ MEDIA_URL }}/emoji/{{ review.sentiment }}.png" alt="" class="card-img-left">
+            <div class="card-body bg-light">
+                <h1 class="card-title">{{ review.name }}</h1>
+                <h2 class="card-title">{{ review.car_make }}</h2>
+                <h2 class="card-title">{{ review.car_model }}</h2>
+                <h2 class="card-title">{{ review.purchase_date }}</h2>
+                <p class="card-text">
+                    {{ review.review }}
+                </p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
     </body>
 
 </html>
