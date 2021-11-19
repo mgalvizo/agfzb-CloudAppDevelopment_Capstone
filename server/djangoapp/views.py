@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
+from .models import CarModel, CarMake
 # from .restapis import related methods
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
@@ -98,6 +99,7 @@ def get_dealerships(request):
 
 def get_dealer_details(request, dealer_id):
     context = {}
+    context['dealer_id'] = dealer_id
     if request.method == "GET":
         url = "https://4f5ee62d.us-south.apigw.appdomain.cloud/api/review?dealer_id=" + str(dealer_id)
         reviews = get_dealer_reviews_from_cf(url, dealer_id)
@@ -110,23 +112,12 @@ def get_dealer_details(request, dealer_id):
 # ...
 
 def add_review(request, dealer_id):
-
+    
     if request.user.is_authenticated:
-        if request.POST:
-            url = "https://4f5ee62d.us-south.apigw.appdomain.cloud/api/review/"
-            name = request.user.first_name + " " + request.user.last_name
+        if request.method == "GET":
+            context = {}
+            context["dealer_id"] = dealer_id
+            cars = CarModel.objects.filter(dealer_id=dealer_id)
+            context['cars'] = cars
 
-            json_payload = {
-                "name": name,
-                "dealership": int(dealer_id),
-                "review": request.POST['review'],
-                "purchase": request.POST['purchase'],
-                "purchase_date": request.POST['purchase_date'],
-                "car_make": request.POST['car_make'],
-                "car_model": request.POST['car_model'],
-                "car_year": request.POST['car_year']
-            }
-            
-            review = post_request(url, json_payload, dealer_id=dealer_id)
-            
-            return HttpResponse(review)
+            return render(request, 'djangoapp/add_review.html', context)

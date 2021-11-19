@@ -28,7 +28,7 @@
             <div class="form-group">
                 <select name="car" id="car" class="form-select" required>
                 {% for car in cars %}
-                <option selected value={{car.id}}>{{car.name}}-{{car.make.name}}-{{ car.year|date:"Y" }}</option>
+                    <option selected value={{car.id}}>{{car.name}}-{{car.make.name}}-{{ car.year|date:"Y" }}</option>
                 {% endfor %}
                 </select>
             </div>
