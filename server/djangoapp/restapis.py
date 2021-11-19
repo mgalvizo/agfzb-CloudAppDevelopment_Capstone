@@ -34,6 +34,7 @@ def get_request(url, **kwargs):
 
 def post_request(url, json_payload, **kwargs):
     print(kwargs)
+    print(json_payload)
     print("POST from {} ".format(url))
     try:
         # Call post method of requests library with URL and parameters

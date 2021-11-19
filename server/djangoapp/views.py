@@ -121,3 +121,31 @@ def add_review(request, dealer_id):
             context['cars'] = cars
 
             return render(request, 'djangoapp/add_review.html', context)
+
+        elif request.method == "POST":
+            url = "https://4f5ee62d.us-south.apigw.appdomain.cloud/api/review/"
+            name = "Anonymous"
+            if request.user.first_name and request.user.last_name:
+                name = request.user.first_name + " " + request.user.last_name
+            
+            car = get_object_or_404(CarModel, id=request.POST['car'])
+
+            if request.POST["purchasecheck"] == "on":
+                purchasecheck = True
+            else:
+                purchasecheck = False
+
+            json_payload = {
+                "name": name,
+                "dealership": int(dealer_id),
+                "review": request.POST['review'],
+                "purchase": purchasecheck,
+                "purchase_date": request.POST['purchasedate'],
+                "car_make": car.make.name,
+                "car_model": car.name,
+                "car_year": car.year.strftime("%Y")
+            }
+
+            review = post_request(url, json_payload)
+            return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
+

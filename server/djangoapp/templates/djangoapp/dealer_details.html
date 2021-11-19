@@ -13,7 +13,7 @@
     <nav class="navbar navbar-light bg-light">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">Best Cars</a>
+                <a class="navbar-brand" href="{% url 'djangoapp:index' %}">Best Cars</a>
             </div>
             <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
@@ -46,8 +46,8 @@
             <div class="card-body bg-light">
                 <h1 class="card-title">{{ review.name }}</h1>
                 <h2 class="card-title">{{ review.car_make }}</h2>
-                <h2 class="card-title">{{ review.car_model }}</h2>
-                <h2 class="card-title">{{ review.purchase_date }}</h2>
+                <h3 class="card-title">{{ review.car_model }}</h2>
+                <h4 class="card-title">{{ review.purchase_date }}</h2>
                 <p class="card-text">
                     {{ review.review }}
                 </p>
